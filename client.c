@@ -3,30 +3,34 @@
 #include <signal.h>
 #include <stdlib.h> // atoi
 
-
-void	send_signal(int pid, unsigned char octet)
+void	send_signal(int server_pid, unsigned char octet)
 {
 	int				i;
 	unsigned char	octet_tmp;
 
 	i = 8;
 	octet_tmp = octet;
-	while (i-- > 0)
+	while (i > 0)
 	{
-		// i--;
+		i--;
 		octet_tmp = octet >> i;
 		if (octet_tmp % 2 == 0)
-			kill(pid, SIGUSR2);
+		{
+			kill(server_pid, SIGUSR2);
+		}
+			
 		else
-			kill(pid, SIGUSR1);
-		usleep(100); // comment it for testing
+		{
+			kill(server_pid, SIGUSR1);
+		}
+		usleep(42); // comment it for testing
 	}
 }
 
 int main(int argc, char **argv) 
-{ 
-	int		pid;
-	char	*str;
+{
+	int		server_pid;
+	char	*message;
 	int		i;
 
 	if (argc != 3)
@@ -35,15 +39,15 @@ int main(int argc, char **argv)
 		return(0);
 	}
 
-	pid = atoi(argv[1]);
-	str = argv[2];
+	server_pid = atoi(argv[1]);
+	message = argv[2];
 	i = 0;
-	while (str[i])
+	while (message[i] != '\0')
 	{
-		send_signal(pid, (unsigned char)str[i]); //cast to unsigned char
+		send_signal(server_pid, (unsigned char)message[i]);
 		i++;
 	}
-	printf("Number of characters written: %d\n", i);
+	send_signal(server_pid, 0);
 
 	return (0); 
-} 
+}
