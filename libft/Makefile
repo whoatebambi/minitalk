@@ -29,14 +29,10 @@ SRC_LIBFT		=	ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c ft
 					ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c ft_lstdelone.c \
 					ft_lstiter.c ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c \
 
-# SOURCES_LIBFT	=	$(addprefix $(SRC_DIR_LIBFT), $(SRC_LIBFT))
-
 
 SRC_DIR_PRINTF	=	./src/ft_printf/
 SRC_PRINTF		=	ft_printf.c ft_putpercent.c ft_strchr.c ft_strlen.c ft_putchar.c ft_putstr.c \
 					ft_putnbr.c ft_putunsigned.c ft_puthexa.c ft_putptr.c ft_format.c \
-
-# SOURCES_PRINTF	=	$(addprefix $(SRC_DIR_PRINTF), $(SRC_PRINTF))
 
 
 ALL_SOURCES = $(SRC_LIBFT) $(SRC_PRINTF)
@@ -51,15 +47,13 @@ all			:	$(NAME)
 
 
 $(NAME)		:	$(OBJ_DIR) $(OBJECTS)
-		ar -rcs $(NAME) $(OBJECTS)
+		@ar -rcs $(NAME) $(OBJECTS)
 		@echo "\033[0;92m* $(NAME) library file was created *\033[0m"
 
 
 $(OBJ_DIR):
 		@mkdir -p $(OBJ_DIR)
 
-# $(OBJ_DIR)%.o : $(SRC_DIR_LIBFT)%.c
-# 		@$(CC) -I$(HDR_DIR) $(CCFLAGS) -c $< -o $@
 
 $(OBJ_DIR)%.o : $(SRC_DIR_LIBFT)%.c
 		@$(CC) -I$(HDR_DIR) $(CCFLAGS) -c $< -o $@
@@ -68,11 +62,11 @@ $(OBJ_DIR)%.o : $(SRC_DIR_PRINTF)%.c
 		@$(CC) -I$(HDR_DIR) $(CCFLAGS) -c $< -o $@
 
 clean		:
-		rm -rf $(OBJECTS) $(OBJ_DIR)
-		@echo "\033[0;91m* $(NAME) object files was deleted *\033[0m"
+		@rm -rf $(OBJECTS) $(OBJ_DIR)
+		@echo "\033[0;91m* $(NAME) object files were deleted *\033[0m"
 
 fclean		:	clean
-		rm -rf $(NAME)
+		@rm -rf $(NAME)
 		@echo "\033[0;91m* $(NAME) was deleted *\033[0m"
 
 re			:	fclean $(NAME)
