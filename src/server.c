@@ -1,5 +1,16 @@
-// #include "../inc/minitalk.h"
-#include "minitalk.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/02 14:33:43 by fcouserg          #+#    #+#             */
+/*   Updated: 2023/11/10 18:34:28 by fcouserg         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../inc/minitalk.h"
 
 void	handle_signal(int signal)
 {
@@ -12,38 +23,25 @@ void	handle_signal(int signal)
 	else
 		bit_value = 0;
 
-	// Shift the character to the left by 1 and set the least significant bit
 	character <<= 1;
 	character |= bit_value;
-
-	// Increment the bit position counter
 	bit_position++;
-
-	// Check if we have reconstructed a full character (8 bits)
 	if (bit_position == 8)
 	{
 		if (character == 0)
-	 		printf("\n");
+	 		ft_printf("\n");
 		else
-			printf("%c", character);	// Print the reconstructed character
-		bit_position = 0;	// Reset for the next character
-		character = 0;	// Reset the character
+			ft_printf("%c", character);
+		bit_position = 0;
+		character = 0;
 	}
 }
 
 int main(void) 
 {	
-	// struct sigaction sa;
-	// sa.sa_handler = &handle_signal;
-	// sigemptyset(&sa.sa_mask);
-	// sa.sa_flags = SA_RESTART; // This flag can help with handling interrupted system calls
-
-	// sigaction(SIGUSR1, &sa, NULL);
-	// sigaction(SIGUSR2, &sa, NULL);
-
 	signal(SIGUSR1, handle_signal);
 	signal(SIGUSR2, handle_signal);
-	printf("Server PID: %d\n", getpid());	
+	ft_printf("Server PID: %d\n", getpid());	
 	while (1)
 		pause();
 	return (0); 

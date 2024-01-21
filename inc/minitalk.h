@@ -13,10 +13,7 @@
 #ifndef MINITALK_H
 # define MINITALK_H
 
-#include <unistd.h>
-#include <stdio.h>
 #include <signal.h>
-#include <stdlib.h> // atoi
 #include "../libft/inc/libft.h"
 
 #endif

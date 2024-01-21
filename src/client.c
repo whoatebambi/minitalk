@@ -1,4 +1,17 @@
-#include "minitalk.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fcouserg <fcouserg@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/02 14:33:43 by fcouserg          #+#    #+#             */
+/*   Updated: 2023/11/10 18:34:28 by fcouserg         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
+#include "../inc/minitalk.h"
 
 void	send_signal(int server_pid, unsigned char octet)
 {
@@ -20,7 +33,7 @@ void	send_signal(int server_pid, unsigned char octet)
 		{
 			kill(server_pid, SIGUSR1);
 		}
-		usleep(42); // comment it for testing
+		usleep(42);
 	}
 }
 
@@ -30,16 +43,12 @@ int main(int argc, char **argv)
 	char	*message;
 	int		i;
 
-	// char	letter;
-	// letter = 'a';
-	// printf("%d\n", ft_toupper(letter));
-	// printf("%d\n", letter);
 	if (argc != 3)
 	{
-		printf("The parameters entered are incorrect.\n");
+		ft_printf("The parameters entered are incorrect.\n");
 		return(0);
 	}
-	server_pid = atoi(argv[1]);
+	server_pid = ft_atoi(argv[1]);
 	message = argv[2];
 	i = 0;
 	while (message[i] != '\0')
@@ -48,6 +57,5 @@ int main(int argc, char **argv)
 		i++;
 	}
 	send_signal(server_pid, 0);
-
 	return (0); 
 }
