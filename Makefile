@@ -37,10 +37,8 @@ OBJSV 				= $(addprefix $(OBJ_DIR), $(addsuffix .o, $(SVR)))
 OBJCLB				= $(addprefix $(OBJ_DIR), $(addsuffix .o, $(CLNBN)))
 OBJSVB 				= $(addprefix $(OBJ_DIR), $(addsuffix .o, $(SVRBN)))
 
-# Targets
 start:				
 					@make all
-					@make bonus
 
 $(LIBFT):
 					@make -C ./libft
@@ -55,7 +53,7 @@ $(SVR):				$(OBJSV) $(LIBFT)
 					@$(CC) $(CFLAGS) $(INC) $(OBJSV) $(LIBFT) -o $(SVR)
 					@echo "\033[0;92m* server file was created *\033[0m"
 					
-bonus:				$(CLNBN) $(SVRBN)
+bonus:				all $(CLNBN) $(SVRBN)
 
 $(CLNBN):			$(OBJCLB) $(LIBFT)
 					@$(CC) $(CFLAGS) $(INC) $(OBJCLB) $(LIBFT) -o $(CLNBN)
@@ -78,7 +76,7 @@ clean:
 fclean:				clean
 					@$(RM) $(NAME) $(SVR) $(CLNBN) $(SVRBN)
 					@$(RM) $(LIBFT)
-					@echo "\033[0;91m* client and server were deleted *\033[0m"
+					@echo "\033[0;91m* all files were deleted *\033[0m"
 
 re:					fclean all
 
