@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../inc/minitalk.h"
 
 void	send_signal(int server_pid, unsigned char octet)
@@ -28,12 +27,11 @@ void	send_signal(int server_pid, unsigned char octet)
 		{
 			kill(server_pid, SIGUSR2);
 		}
-			
 		else
 		{
 			kill(server_pid, SIGUSR1);
 		}
-		usleep(42);
+		usleep(10);
 	}
 }
 

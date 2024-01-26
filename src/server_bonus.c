@@ -11,38 +11,64 @@
 /* ************************************************************************** */
 
 #include "../inc/minitalk.h"
+#include <stdio.h>
 
-void	handle_signal(int signal)
+// void	simple_handle_signal(int signum)
+// {
+// 	static int	bit = 7;
+// 	static int	c = 0;
+// 	if (signum == SIGUSR1)
+// 		c += 1 << bit;
+// 	else if (signum == SIGUSR2)
+// 		c += 0 << bit;
+// 	bit--;
+// 	if (bit == -1)
+// 	{
+// 		if (c == 0)
+// 	 		ft_printf("\n");
+// 		else
+// 			ft_printf("%c", c);
+// 		bit = 7;
+// 		c = 0;
+// 	}
+// }
+
+void	handle_signal(int signum, siginfo_t *info, void *context)
 {
-	static unsigned char	character;
-	static int				bit_position;
-	int						bit_value;
+	static int	bit;
+	static int	c;
 
-	if (signal == SIGUSR1)
-		bit_value = 1;
-	else
-		bit_value = 0;
-
-	character <<= 1;
-	character |= bit_value;
-	bit_position++;
-	if (bit_position == 8)
+	(void)context;
+	(void)info;
+	if (signum == SIGUSR1)
+		c += 1 << bit;
+	// else if (signum == SIGUSR2)
+	// 	c += 0 << bit;
+	bit++;
+	if (bit == 8)
 	{
-		if (character == 0)
-	 		ft_printf("\n");
-		else
-			ft_printf("%c", character);
-		bit_position = 0;
-		character = 0;
+		ft_printf("%c", c);
+		if (c == '\0')
+		{
+			kill(info->si_pid, SIGUSR2);
+			ft_printf("\n");
+		}
+		bit = 0;
+		c = 0;
 	}
 }
 
 int main(void) 
 {	
-	signal(SIGUSR1, handle_signal);
-	signal(SIGUSR2, handle_signal);
+	struct sigaction	sigact;
+
+	sigact.sa_sigaction = handle_signal;
+	sigact.sa_flags = SA_SIGINFO;
+	sigemptyset(&sigact.sa_mask);
 	ft_printf("Server PID: %d\n", getpid());	
 	while (1)
-		pause();
-	return (0); 
+	{
+		sigaction(SIGUSR1, &sigact, NULL);
+		sigaction(SIGUSR2, &sigact, NULL);
+	}
 } 
