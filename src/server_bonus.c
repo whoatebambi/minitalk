@@ -11,48 +11,23 @@
 /* ************************************************************************** */
 
 #include "../inc/minitalk.h"
-#include <stdio.h>
 
-// void	simple_handle_signal(int signum)
-// {
-// 	static int	bit = 7;
-// 	static int	c = 0;
-// 	if (signum == SIGUSR1)
-// 		c += 1 << bit;
-// 	else if (signum == SIGUSR2)
-// 		c += 0 << bit;
-// 	bit--;
-// 	if (bit == -1)
-// 	{
-// 		if (c == 0)
-// 	 		ft_printf("\n");
-// 		else
-// 			ft_printf("%c", c);
-// 		bit = 7;
-// 		c = 0;
-// 	}
-// }
-
-void	handle_signal(int signum, siginfo_t *info, void *context)
+void	handle_signal(int signal, siginfo_t *info, void *context)
 {
 	static int	bit;
 	static int	c;
 
 	(void)context;
 	(void)info;
-	if (signum == SIGUSR1)
+	if (signal == SIGUSR1)
 		c += 1 << bit;
-	// else if (signum == SIGUSR2)
-	// 	c += 0 << bit;
 	bit++;
 	if (bit == 8)
 	{
 		ft_printf("%c", c);
+		kill(info->si_pid, SIGUSR2);
 		if (c == '\0')
-		{
-			kill(info->si_pid, SIGUSR2);
 			ft_printf("\n");
-		}
 		bit = 0;
 		c = 0;
 	}

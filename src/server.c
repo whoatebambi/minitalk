@@ -12,37 +12,38 @@
 
 #include "../inc/minitalk.h"
 
-void	handle_signal(int signal)
+void	handle_signal(int signal, siginfo_t *info, void *context)
 {
-	static unsigned char	character;
-	static int				bit_position;
-	int						bit_value;
+	static int	bit;
+	static int	c;
 
+	(void)context;
+	(void)info;
 	if (signal == SIGUSR1)
-		bit_value = 1;
-	else
-		bit_value = 0;
-
-	character <<= 1;
-	character |= bit_value;
-	bit_position++;
-	if (bit_position == 8)
+		c += 1 << bit;
+	bit++;
+	if (bit == 8)
 	{
-		if (character == 0)
-	 		ft_printf("\n");
-		else
-			ft_printf("%c", character);
-		bit_position = 0;
-		character = 0;
+		ft_printf("%c", c);
+		// kill(info->si_pid, SIGUSR2);
+		if (c == '\0')
+			ft_printf("\n");
+		bit = 0;
+		c = 0;
 	}
 }
 
 int main(void) 
 {	
-	signal(SIGUSR1, handle_signal);
-	signal(SIGUSR2, handle_signal);
+	struct sigaction	sigact;
+
+	sigact.sa_sigaction = handle_signal;
+	sigact.sa_flags = SA_SIGINFO;
+	sigemptyset(&sigact.sa_mask);
 	ft_printf("Server PID: %d\n", getpid());	
 	while (1)
-		pause();
-	return (0); 
+	{
+		sigaction(SIGUSR1, &sigact, NULL);
+		sigaction(SIGUSR2, &sigact, NULL);
+	}
 } 

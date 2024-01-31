@@ -18,29 +18,29 @@ void    ft_control(int signal)
 {
     if (signal == SIGUSR2)
 		g_control = 1;
-	// ft_printf("BIEN RECU\n");
+	// ft_printf("Server received message\n");
 }
 
 void	send_signal(int pid, int c)
 {
 	static int	bit;
 
+	g_control = 0;
 	while (bit < 8)
 	{
-		// g_control = 0;
 		if ((c & (1 << bit))) // if ((c << bit) & 1)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
 		usleep(42);
 		bit++;
-		if (g_control != 1)
-			usleep(10);
 	}
+	while (g_control != 1)
+		pause();
 	bit = 0;
 }
 
-int main(int argc, char **argv) 
+int main(int argc, char **argv)
 {
 	int				pid;
 	unsigned char	*message;
@@ -52,9 +52,9 @@ int main(int argc, char **argv)
 	}
 	pid = ft_atoi(argv[1]);
 	message = (unsigned char *)argv[2];
+	signal(SIGUSR2, ft_control);
 	while (*message)
 		send_signal(pid, *message++);
-	signal(SIGUSR2, ft_control);
 	send_signal(pid, '\0');
 	return (0); 
 }
